@@ -1,0 +1,74 @@
+#!/bin/sh
+
+#run as bash log pippos
+
+motherFolder='/home/enricojr/cernbox/logbook'
+EXITLINE='ciao'
+ATTACHMENTLINE='atch'
+
+##############################
+#cheking that logName is given
+##############################
+logName=$1
+if [ -z "$logName" ]
+then
+  echo "Usage: logWrite <logName>"
+  exit 1
+fi
+
+#########################################
+# defining logbook and attachments folder
+#########################################
+logFolder="$motherFolder/logbooks/$logName"
+logfileName="$logFolder/logbook.txt"
+attachmentsFolderName="$logFolder/attachments/"
+
+################
+# if new, create
+################
+if [ ! -d "$logFolder" ]; then
+    echo -n "logbook $logName does not exist yet. Create new log? [y/n] "
+    read answer
+    if [ "$answer" = "y" ]; then
+	mkdir $logFolder
+	mkdir $attachmentsFolderName
+	echo "created new logbook named $logName"
+    else
+	exit 2;
+    fi
+
+fi
+
+###############
+# infinite loop
+###############
+while [ true ]
+do
+
+#reading line
+    read -e -p "$logName => " line
+
+#if string is empty, continue
+    if [ -z "$line" ]; then
+	continue;
+
+#if line is EXITLINE, break
+    elif [ "$line" = "$EXITLINE" ]; then
+	break;
+
+#if line is ATTACHMENTLINE, ask for attachment
+    elif [ "$line" = "$ATTACHMENTLINE" ]; then
+	read -e -p "attachment: " attachment
+	cp -r $attachment $attachmentsFolderName
+	attachmentName=`ls -1t $attachmentsFolderName | head -1`
+	attachmentDate=`date +"%Y-%m-%d-%H-%M-%S_"`
+	attachmentFull=$attachmentDate$attachmentName
+	mv $attachmentsFolderName$attachmentName $attachmentsFolderName$attachmentFull
+	echo `date +"%Y-%m-%d %a @ %H:%M:%S"` "| ATTACHMENT: $attachmentFull" >> $logfileName
+
+#else write
+    else
+	echo `date +"%Y-%m-%d %a @ %H:%M:%S"` "|" $line >> $logfileName
+    fi
+
+done

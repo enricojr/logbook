@@ -1,0 +1,37 @@
+#!/bin/sh
+
+motherFolder='/home/enricojr/cernbox/logbook'
+
+##############################
+#cheking that logName is given
+##############################
+logName=$1
+if [ -z "$logName" ]
+then
+  echo "Usage: logRead <logName>"
+  exit 1
+fi
+
+##################
+# defining logbook
+##################
+logFolder="$motherFolder/logbooks/$logName"
+logfileName="$logFolder/logbook.txt"
+
+#####################
+# check if log exists
+#####################
+if [ ! -d "$logFolder" ]; then
+    echo "logbook $logName does not exist."
+    exit 1
+fi
+
+##############
+# dump logbook
+##############
+
+if [ $2 == "r" ]; then
+    tac $logfileName | less
+else
+    cat $logfileName | less
+fi

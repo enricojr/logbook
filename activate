@@ -1,0 +1,6 @@
+#!/bin/sh
+
+alias logWrite='bash /home/enricojr/cernbox/logbook/logWrite'
+alias logRead='bash /home/enricojr/cernbox/logbook/logRead'
+alias logEdit='bash /home/enricojr/cernbox/logbook/logEdit'
+alias logList='bash /home/enricojr/cernbox/logbook/logList'

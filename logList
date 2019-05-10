@@ -1,0 +1,5 @@
+#!/bin/sh
+
+motherFolder='/home/enricojr/cernbox/logbook'
+
+ls $motherFolder/logbooks
